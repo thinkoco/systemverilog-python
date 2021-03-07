@@ -3,11 +3,22 @@ Systemverilog DPI-C call Python function
 
 ## 0.systemverilog_only
 ```
-    python3 -m pip install scapy
     cd 0.systemverilog_only
-    export PYTHONPATH=.
     make
 ```
+## 1.systemverilog_with_python_module_code
+```
+   cd 1.systemverilog_with_python_module_code
+   tar xvf scapy-2.4.4.tar.gz
+   make
+```
+## 2.systemverilog_with_installed_python_module
+```
+    python3 -m pip install scapy
+    cd 2.systemverilog_with_installed_python_module
+    make
+```
+
 ### logs
 ```
 \rm -rf simv* csrc* *.log __pycache__ ucli.key vc_hdrs.h stack.info.*
