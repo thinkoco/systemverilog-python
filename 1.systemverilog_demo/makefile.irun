@@ -1,0 +1,15 @@
+PYTHON_PATH := $(abspath ./soft)
+SOFT_INC := $(abspath ./soft)
+SOFT_SRC := $(shell echo `pwd`)/soft
+
+IRUN_CFLAG := -ccargs -lpython3.6m -ccargs -I/usr/include/python3.6m -ccargs -I$(SOFT_INC) -D'PYTHON_PATH=\"$(PYTHON_PATH)\"'
+IRUN_LDFLAG := -Wld,-lpython3.6m
+
+all:	clean comp run
+
+clean:
+	rm -rf INCA_libs  irun.* *.log $(SOFT_SRC)/__pycache__
+comp:
+	irun -sv -64bit -c $(IRUN_CFLAG) $(IRUN_LDFLAG) $(SOFT_SRC)/c_call_py.c  gen_pkt_tb.sv -top hello_world
+run:
+	irun -R -64bit

@@ -1,0 +1,16 @@
+PYTHON_PATH := $(abspath ./soft)
+SOFT_INC := $(abspath ./soft)
+SOFT_SRC := $(shell echo `pwd`)/soft
+
+VLOG_CFLAG := -ccflags -lpython3.6m -ccflags -I/usr/include/python3.6m -ccflags -I$(SOFT_INC) -ccflags -D'PYTHON_PATH=\"$(PYTHON_PATH)\"'
+VLOG_LDFLAG := -ldflags -lpython3.6m
+
+all:	clean comp run
+
+clean:
+	rm -rf transcript  *.log $(SOFT_SRC)/__pycache__ work*
+comp:
+	vlib work
+	vlog -64 $(VLOG_CFLAG) $(SOFT_SRC)/c_call_py.c  gen_pkt_tb.sv
+run:
+	vsim -64 $(VLOG_LDFLAG) -do vsim.do -novopt -c hello_world

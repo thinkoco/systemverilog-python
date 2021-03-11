@@ -1,0 +1,15 @@
+PYTHON_PATH := $(abspath ./soft)
+SOFT_INC := $(abspath ./soft)
+SOFT_SRC := $(shell echo `pwd`)/soft
+
+VCS_CFLAG := -CC -lpython3.6m -CC -I/usr/include/python3.6m -CC -I$(SOFT_INC) -CC -D'PYTHON_PATH=\"$(PYTHON_PATH)\"'
+VCS_LDFLAG := -LDFLAGS -Wl,--no-as-needed -LDFLAGS -lpython3.6m
+
+all:	clean comp run
+
+clean:
+	rm -rf simv* csrc* *.log $(SOFT_SRC)/__pycache__ ucli.key vc_hdrs.h stack.info.*
+comp:
+	vcs -full64 $(VCS_CFLAG) $(VCS_LDFLAG) $(SOFT_SRC)/c_call_py.c -sverilog gen_pkt_tb.sv -l comp.log
+run:
+	./simv -l run.log

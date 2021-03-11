@@ -1,5 +1,4 @@
 #include<Python.h>
-#include<svdpi.h>
 #include<stdlib.h>
 
 static PyObject *pModule  = NULL;
@@ -32,16 +31,21 @@ extern void c_py_init(){
 }
 
 extern void c_py_final(){
+    Py_DECREF(pModule); 
+    Py_DECREF(pFunc  ); 
+    Py_DECREF(pDict  ); 
+    Py_DECREF(pReturn); 
+    Py_DECREF(ArgList); 
     PyGILState_Release(py_state);
     Py_Finalize();
     printf("finalize Python runtime !\n");
 }
 
-static unsigned char tmp[256] = {0};
-extern void c_py_gen_packet(/*output*/ svBitVecVal *pkt, /*output*/ svBitVecVal *len){
+//static unsigned char tmp[256] = {0};
+extern void c_py_gen_packet(){
     int num;
     int i;
-    unsigned char *result;
+    char *result;
 
     pReturn = PyObject_CallObject(pFunc, ArgList);
 
@@ -50,14 +54,22 @@ extern void c_py_gen_packet(/*output*/ svBitVecVal *pkt, /*output*/ svBitVecVal 
         result = PyBytes_AsString(pReturn);
         //memcpy(pkt,result,num);
         for( i = 0; i < num; i++){
-            tmp[255-i] = result[i];
-            printf("%02X ",result[i]);
+            printf("%02X ", result[i]);
         }
-        memcpy(pkt, tmp, 256);
-
-        *len = num;
+        
         printf("\n");
     } else {
         printf("Get No Bytes Form Python !!!\n");
     }
+}
+
+int main( int argc, char* args[] ){
+    
+    c_py_init();
+    
+    c_py_gen_packet();
+
+    c_py_final();
+    
+    return 0;
 }

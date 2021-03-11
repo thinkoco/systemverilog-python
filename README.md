@@ -1,12 +1,45 @@
 # systemverilog-python
 Systemverilog DPI-C call Python function
 
-## 0.systemverilog_only
+
+        SystemVerilog                    C                        Python
+     ___________________         __________________         _________________
+    |                   |       |                  |       |                 |
+    |                   |       |  py_initial(){}; |       | import  module  |
+    | DPI-C func1(a,b); |       |                  |       |                 |
+    | DPI-C func2(c,d); |       |  func1(a,b){     |       |                 |
+    |                   |       |   py_func1_wrap  |       |                 |
+    |  py_initial();    |       |  };              |       |                 |
+    |                   | <---> |                  | <---> | def py_func1()  |
+    |  func1(x,x);      |       |  func2(c,d){     |       |                 |
+    |  func2(x,x);      |       |   py_func2_wrap  |       | def py_func2()  |
+    |                   |       |  };              |       |                 |
+    |  py_final();      |       |                  |       |                 |
+    |                   |       |  py_final(){};   |       |                 |
+    |___________________|       |__________________|       |_________________|
+
+
+## Feature
+- Synopsys,Mentor Graphics,Cadence EDA Tools
+- Python Function Call
+- Python modules e.g. Scapy
+- systemverilog data form/to python
+
+## Use Guide
+### 0.c_call_py_only
 ```
-    cd 0.systemverilog_only
+    cd 0.c_call_py_only
     make
 ```
-## 1.systemverilog_with_python_module_code
+### 1.systemverilog_demo
+```
+    cd 0.systemverilog_demo
+    make -f makefile.vcs     #for Synopsys VCS
+    make -f makefile.questa  #for Mentor Graphics Questa
+    make -f makefile.irun    #for Cadence INCISIVE    
+```
+
+### 1.systemverilog_with_python_module_code
 ```
    cd 1.systemverilog_with_python_module_code
    tar xvf scapy-2.4.4.tar.gz
